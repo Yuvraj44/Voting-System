@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -14,4 +16,25 @@ public class VotingController {
 	private final Map<String, Integer> candidates = new HashMap<>();
 
     private final ReentrantLock lock = new ReentrantLock();
+    
+    @PostMapping("/entercandidate")
+    public String enterCandidate(@RequestParam String name) 
+    {
+        lock.lock();
+        try 
+        {
+            if (candidates.containsKey(name)) 
+                return "Candidate already exists.";
+             else
+            {
+                candidates.put(name, 0);
+                return "Saved";
+            }
+        } 
+        finally
+        {
+            lock.unlock();
+        }
+    }
+
 }
