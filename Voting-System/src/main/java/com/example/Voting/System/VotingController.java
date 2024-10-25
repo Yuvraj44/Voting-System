@@ -36,5 +36,25 @@ public class VotingController {
             lock.unlock();
         }
     }
+    
+    @PostMapping("/castvote")
+    public String castVote(@RequestParam String name) 
+    {
+        lock.lock();
+        try 
+        {
+            if (candidates.containsKey(name)) {
+                candidates.put(name, candidates.get(name) + 1);
+                return "Vote casted";
+            }
+            else 
+                return "Candidate does not exist.";
+            
+        }
+         finally 
+        {
+            lock.unlock();
+        }
+    }
 
 }
