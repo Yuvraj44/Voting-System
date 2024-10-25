@@ -75,5 +75,12 @@ public class VotingController {
             lock.unlock();
         }
     }
+    
+    @GetMapping("/listvote")
+    public Map<String, Integer> listVotes() 
+    {
+        return candidates; 
+    }
+
 
 }
