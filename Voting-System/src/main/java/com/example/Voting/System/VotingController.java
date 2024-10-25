@@ -81,6 +81,36 @@ public class VotingController {
     {
         return candidates; 
     }
+    
+    @GetMapping("/getwinner")
+    public String getWinner() 
+    {
+        lock.lock();
+        try 
+        {
+            int maxVotes = candidates.values().stream()
+                .max(Integer::compareTo)
+                .orElse(0);
+
+        
+            List<String> winners = candidates.entrySet().stream()
+                .filter(entry -> entry.getValue() == maxVotes)
+                .map(Map.Entry::getKey)
+                .toList();
+
+            if (winners.isEmpty()) 
+                return "No candidates available.";
+            else if (winners.size() == 1) 
+                return "The winner is " + winners.get(0);
+            else 
+                return "It's a tie! The winners are " + String.join(", ", winners);
+        
+        } 
+        finally 
+        {
+            lock.unlock();
+        }
+    }
 
 
 }
