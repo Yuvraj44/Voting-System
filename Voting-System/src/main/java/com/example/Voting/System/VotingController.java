@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,6 +53,24 @@ public class VotingController {
             
         }
          finally 
+        {
+            lock.unlock();
+        }
+    }
+    
+    @GetMapping("/countvote")
+    public String countVote(@RequestParam String name) 
+    {
+        lock.lock();
+        try 
+        {
+            if (candidates.containsKey(name)) 
+                return "Candidate " + name + " has " + candidates.get(name) + " votes.";
+            else 
+                return "Candidate does not exist.";
+            
+        } 
+        finally 
         {
             lock.unlock();
         }
